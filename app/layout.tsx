@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KnowFut — Today's Soccer Matches, Watch Guide & Match Meaning",
+  title: "KnowFut - Today's Soccer Matches, Watch Guide & Match Meaning",
   description: "KnowFut helps soccer fans find today's matches, legal watch options, kickoff times, fixtures, standings, and simple match guides.",
 };
 
