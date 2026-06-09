@@ -90,34 +90,24 @@ export default async function WorldCup() {
                 <div className="divide-y divide-[#1A6B3A]">
                   {groupMatches.map((match, i) => (
                     <div key={i} className="px-4 py-3 hover:bg-[#1A6B3A] transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3 flex-1">
-                          <span className="font-bold text-sm w-24 text-right">
-                            {match.team1}
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      <span className="font-bold text-sm flex-1 text-center">{match.team1}</span>
+                      <div className="text-center w-12">
+                        {match.score ? (
+                          <span className="text-[#F5C518] font-black">
+                            {match.score.ft[0]} - {match.score.ft[1]}
                           </span>
-                          <div className="text-center w-16">
-                            {match.score ? (
-                              <span className="text-[#F5C518] font-black">
-                                {match.score.ft[0]} - {match.score.ft[1]}
-                              </span>
-                            ) : (
-                              <span className="text-[#AACCB8] text-xs font-bold">vs</span>
-                            )}
-                          </div>
-                          <span className="font-bold text-sm w-24">
-                            {match.team2}
-                          </span>
-                        </div>
-                        <div className="text-right ml-4">
-                          <div className="text-[#F5C518] text-xs font-bold">
-                            {match.date}
-                          </div>
-                          <div className="text-[#AACCB8] text-xs">
-                            {match.ground}
-                          </div>
-                        </div>
+                        ) : (
+                          <span className="text-[#AACCB8] text-xs font-bold">vs</span>
+                        )}
                       </div>
+                      <span className="font-bold text-sm flex-1 text-center">{match.team2}</span>
                     </div>
+                    <div className="flex items-center justify-between border-t border-[#0A3D1F] pt-2">
+                      <span className="text-[#F5C518] text-xs font-bold">{match.date}</span>
+                      <span className="text-[#AACCB8] text-xs">{match.ground}</span>
+                    </div>
+                  </div>
                   ))}
                 </div>
               </div>
