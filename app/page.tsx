@@ -1,4 +1,5 @@
 import { getTodayMatches, getUpcomingMatches } from "./lib/matches";
+import Navbar from "./components/Navbar";
 
 export default async function Home() {
   const matches = await getTodayMatches();
@@ -13,25 +14,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[#0A3D1F] text-white">
       {/* Navigation */}
-      <nav className="border-b border-[#1A6B3A] px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">⚽</span>
-            <span className="text-xl font-black tracking-tight">KNOWFUT</span>
-          </div>
-          <div className="hidden md:flex items-center gap-6 text-sm text-[#AACCB8]">
-            <a href="/" className="text-white font-medium">Today</a>
-            <a href="/fixtures" className="hover:text-white transition-colors">Fixtures</a>
-            <a href="/standings" className="hover:text-white transition-colors">Standings</a>
-            <a href="/world-cup" className="hover:text-white transition-colors">World Cup</a>
-          </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-[#AACCB8]">EN</span>
-            <span className="text-[#AACCB8]">|</span>
-            <span className="text-[#F5C518] font-medium cursor-pointer">ES</span>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero */}
       <div className="border-b border-[#1A6B3A] px-6 py-10">
