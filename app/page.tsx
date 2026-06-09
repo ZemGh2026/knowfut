@@ -46,19 +46,20 @@ export default async function Home() {
                 <p className="text-[#AACCB8] text-sm mt-1">No matches today - here are the upcoming fixtures:</p>
               </div>
               <div className="flex flex-col gap-3">
-                {upcoming.map((match: any, index: number) => (
-                  <div key={index} className="bg-[#1A6B3A] rounded-xl p-4 flex items-center justify-between hover:bg-[#2E9E58] transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3 w-36">
+              {upcoming.map((match: any, index: number) => (
+                  <div key={index} className="bg-[#1A6B3A] rounded-xl p-4 hover:bg-[#2E9E58] transition-colors cursor-pointer">
+                    <div className="flex items-center gap-2 mb-3">
                       <span className="text-xs bg-[#0A3D1F] text-[#F5C518] px-2 py-1 rounded font-bold">🌍 World Cup</span>
+                      <span className="text-xs text-[#AACCB8]">{match.group}</span>
                     </div>
-                    <div className="flex items-center gap-4 flex-1 justify-center">
-                      <span className="font-bold text-right w-28">{match.team1}</span>
-                      <span className="text-[#F5C518] font-black text-lg px-3">vs</span>
-                      <span className="font-bold text-left w-28">{match.team2}</span>
+                    <div className="flex items-center justify-center gap-4 mb-3">
+                      <span className="font-bold text-sm flex-1 text-center">{match.team1}</span>
+                      <span className="text-[#F5C518] font-black text-lg px-2">vs</span>
+                      <span className="font-bold text-sm flex-1 text-center">{match.team2}</span>
                     </div>
-                    <div className="text-right w-36">
-                      <div className="text-[#F5C518] font-bold text-sm">{match.date}</div>
-                      <div className="text-xs text-[#AACCB8] mt-1">{match.group} · {match.ground}</div>
+                    <div className="flex items-center justify-between border-t border-[#0A3D1F] pt-2">
+                      <span className="text-[#F5C518] font-bold text-xs">{match.date}</span>
+                      <span className="text-[#AACCB8] text-xs">{match.ground}</span>
                     </div>
                   </div>
                 ))}
