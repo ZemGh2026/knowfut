@@ -1,144 +1,145 @@
-// Maps team names from openfootball API → flag emoji
-export const countryFlags: Record<string, string> = {
+// Maps team names → ISO 3166-1 alpha-2 codes for use with flag-icons CSS library
+// Usage: <span className={`fi fi-${getFlag("Mexico")}`} />
+// Install: npm install flag-icons  then import 'flag-icons/css/flag-icons.min.css' in layout.tsx
+
+export const countryFlagCodes: Record<string, string> = {
     // Group A
-    Mexico: "🇲🇽",
-    "South Africa": "🇿🇦",
-    "South Korea": "🇰🇷",
+    Mexico: "mx",
+    "South Africa": "za",
+    "South Korea": "kr",
   
     // Group B
-    Canada: "🇨🇦",
-    Qatar: "🇶🇦",
-    Switzerland: "🇨🇭",
+    Canada: "ca",
+    Qatar: "qa",
+    Switzerland: "ch",
   
     // Group C
-    Brazil: "🇧🇷",
-    Morocco: "🇲🇦",
-    Haiti: "🇭🇹",
-    Scotland: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+    Brazil: "br",
+    Morocco: "ma",
+    Haiti: "ht",
+    Scotland: "gb-sct",
   
     // Group D
-    USA: "🇺🇸",
-    Paraguay: "🇵🇾",
-    Australia: "🇦🇺",
+    USA: "us",
+    Paraguay: "py",
+    Australia: "au",
   
     // Group E
-    Spain: "🇪🇸",
-    Japan: "🇯🇵",
-    "New Zealand": "🇳🇿",
+    Spain: "es",
+    Japan: "jp",
+    "New Zealand": "nz",
   
     // Group F
-    Portugal: "🇵🇹",
-    Argentina: "🇦🇷",
-    Indonesia: "🇮🇩",
+    Portugal: "pt",
+    Argentina: "ar",
+    Indonesia: "id",
   
     // Group G
-    England: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    Iran: "🇮🇷",
-    Senegal: "🇸🇳",
+    England: "gb-eng",
+    Iran: "ir",
+    Senegal: "sn",
   
     // Group H
-    Germany: "🇩🇪",
-    Belgium: "🇧🇪",
-    "Saudi Arabia": "🇸🇦",
+    Germany: "de",
+    Belgium: "be",
+    "Saudi Arabia": "sa",
   
     // Group I
-    Netherlands: "🇳🇱",
-    France: "🇫🇷",
-    Chile: "🇨🇱",
+    Netherlands: "nl",
+    France: "fr",
+    Chile: "cl",
   
     // Group J
-    Uruguay: "🇺🇾",
-    Colombia: "🇨🇴",
-    Slovenia: "🇸🇮",
+    Uruguay: "uy",
+    Colombia: "co",
+    Slovenia: "si",
   
     // Group K
-    Ecuador: "🇪🇨",
-    "Costa Rica": "🇨🇷",
-    Nigeria: "🇳🇬",
+    Ecuador: "ec",
+    "Costa Rica": "cr",
+    Nigeria: "ng",
   
     // Group L
-    Turkey: "🇹🇷",
-    "Côte d'Ivoire": "🇨🇮",
-    "Ivory Coast": "🇨🇮",
+    Turkey: "tr",
+    "Côte d'Ivoire": "ci",
+    "Ivory Coast": "ci",
   
-    // Other confirmed/likely teams
-    Serbia: "🇷🇸",
-    Poland: "🇵🇱",
-    Denmark: "🇩🇰",
-    Croatia: "🇭🇷",
-    Austria: "🇦🇹",
-    Czech: "🇨🇿",
-    Czechia: "🇨🇿",
-    Ukraine: "🇺🇦",
-    Romania: "🇷🇴",
-    Hungary: "🇭🇺",
-    Slovakia: "🇸🇰",
-    Greece: "🇬🇷",
-    "Bosnia and Herzegovina": "🇧🇦",
-    Bosnia: "🇧🇦",
-    Wales: "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    Sweden: "🇸🇪",
-    Norway: "🇳🇴",
-    Finland: "🇫🇮",
-    Iceland: "🇮🇸",
-    Russia: "🇷🇺",
-    Egypt: "🇪🇬",
-    Cameroon: "🇨🇲",
-    Ghana: "🇬🇭",
-    Tunisia: "🇹🇳",
-    Algeria: "🇩🇿",
-    Mali: "🇲🇱",
-    Zambia: "🇿🇲",
-    Kenya: "🇰🇪",
-    Mozambique: "🇲🇿",
-    Tanzania: "🇹🇿",
-    Ethiopia: "🇪🇹",
-    China: "🇨🇳",
-    India: "🇮🇳",
-    Thailand: "🇹🇭",
-    Vietnam: "🇻🇳",
-    Philippines: "🇵🇭",
-    Malaysia: "🇲🇾",
-    Singapore: "🇸🇬",
-    "New Caledonia": "🇳🇨",
-    Fiji: "🇫🇯",
-    "Papua New Guinea": "🇵🇬",
-    Jamaica: "🇯🇲",
-    Trinidad: "🇹🇹",
-    "Trinidad and Tobago": "🇹🇹",
-    Honduras: "🇭🇳",
-    Guatemala: "🇬🇹",
-    Panama: "🇵🇦",
-    Cuba: "🇨🇺",
-    Venezuela: "🇻🇪",
-    Peru: "🇵🇪",
-    Bolivia: "🇧🇴",
-    Bahrain: "🇧🇭",
-    "United Arab Emirates": "🇦🇪",
-    UAE: "🇦🇪",
-    Kuwait: "🇰🇼",
-    Iraq: "🇮🇶",
-    Oman: "🇴🇲",
-    Jordan: "🇯🇴",
-    Palestine: "🇵🇸",
-    Lebanon: "🇱🇧",
-    Syria: "🇸🇾",
-    Israel: "🇮🇱",
-    "North Korea": "🇰🇵",
-    Uzbekistan: "🇺🇿",
-    Kazakhstan: "🇰🇿",
-    Tonga: "🇹🇴",
-    Samoa: "🇼🇸",
-    Vanuatu: "🇻🇺",
+    // Additional teams
+    Serbia: "rs",
+    Poland: "pl",
+    Denmark: "dk",
+    Croatia: "hr",
+    Austria: "at",
+    Czech: "cz",
+    Czechia: "cz",
+    "Czech Republic": "cz",
+    Ukraine: "ua",
+    Romania: "ro",
+    Hungary: "hu",
+    Slovakia: "sk",
+    Greece: "gr",
+    "Bosnia and Herzegovina": "ba",
+    Bosnia: "ba",
+    Wales: "gb-wls",
+    Sweden: "se",
+    Norway: "no",
+    Finland: "fi",
+    Iceland: "is",
+    Russia: "ru",
+    Egypt: "eg",
+    Cameroon: "cm",
+    Ghana: "gh",
+    Tunisia: "tn",
+    Algeria: "dz",
+    Mali: "ml",
+    Zambia: "zm",
+    Kenya: "ke",
+    Tanzania: "tz",
+    Ethiopia: "et",
+    China: "cn",
+    India: "in",
+    Thailand: "th",
+    Vietnam: "vn",
+    Philippines: "ph",
+    Malaysia: "my",
+    Singapore: "sg",
+    Fiji: "fj",
+    "Papua New Guinea": "pg",
+    Jamaica: "jm",
+    "Trinidad and Tobago": "tt",
+    Trinidad: "tt",
+    Honduras: "hn",
+    Guatemala: "gt",
+    Panama: "pa",
+    Cuba: "cu",
+    Venezuela: "ve",
+    Peru: "pe",
+    Bolivia: "bo",
+    Bahrain: "bh",
+    "United Arab Emirates": "ae",
+    UAE: "ae",
+    Kuwait: "kw",
+    Iraq: "iq",
+    Oman: "om",
+    Jordan: "jo",
+    Palestine: "ps",
+    Lebanon: "lb",
+    Syria: "sy",
+    Israel: "il",
+    "North Korea": "kp",
+    Uzbekistan: "uz",
+    Kazakhstan: "kz",
+    Tonga: "to",
+    Samoa: "ws",
+    Vanuatu: "vu",
   };
   
-  export function getFlag(teamName: string): string {
-    if (!teamName) return "🏳️";
-    // Direct match
-    if (countryFlags[teamName]) return countryFlags[teamName];
-    // Partial match (e.g. "UEFA Path D winner" → no flag)
-    const key = Object.keys(countryFlags).find((k) =>
+  export function getFlagCode(teamName: string): string | null {
+    if (!teamName) return null;
+    if (countryFlagCodes[teamName]) return countryFlagCodes[teamName];
+    // Fuzzy match
+    const key = Object.keys(countryFlagCodes).find((k) =>
       teamName.toLowerCase().includes(k.toLowerCase())
     );
-    return key ? countryFlags[key] : "🏳️";
+    return key ? countryFlagCodes[key] : null;
   }
