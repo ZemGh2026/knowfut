@@ -60,7 +60,7 @@ export default async function Home() {
             <div>
               <div className="bg-[#1A6B3A] rounded-xl p-4 mb-4 text-center">
                 <p className="text-[#F5C518] font-bold">⚽ World Cup starts June 11!</p>
-                <p className="text-[#AACCB8] text-sm mt-1">No matches today — here are the upcoming fixtures:</p>
+                <p className="text-[#AACCB8] text-sm mt-1">No matches today - here are the upcoming fixtures:</p>
               </div>
               <div className="flex flex-col gap-3">
                 {upcoming.map((match: any, index: number) => (
@@ -143,7 +143,7 @@ export default async function Home() {
       {/* Footer */}
       <footer className="border-t border-[#1A6B3A] px-6 py-6 mt-8">
         <div className="max-w-6xl mx-auto flex items-center justify-between text-sm text-[#AACCB8]">
-          <span>⚽ KnowFut — Know the game.</span>
+          <span>⚽ KnowFut - Know the game.</span>
           <span>© 2026 KnowFut</span>
         </div>
       </footer>
