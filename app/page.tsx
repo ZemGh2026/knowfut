@@ -59,7 +59,7 @@ export default async function Home() {
                       <span className="text-[#F5C518] font-black text-lg px-2">vs</span>
                       <span className="font-bold text-sm flex-1 text-center">{match.team2}</span>
                     </div>
-                    <div className="flex items-center justify-between border-t border-[#0A3D1F] pt-2">
+                    <div className="flex items-center gap-4 border-t border-[#0A3D1F] pt-2">
                       <span className="text-[#F5C518] font-bold text-xs">{match.date}</span>
                       <span className="text-[#AACCB8] text-xs">{match.ground}</span>
                     </div>
