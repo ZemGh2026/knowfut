@@ -38,14 +38,14 @@ export default async function WorldCup() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-3">
             <span className="text-4xl">🌍</span>
-            <h1 className="text-3xl md:text-4xl font-black">
+            <h1 className="text-xl md:text-4xl font-black">
               FIFA World Cup 2026
             </h1>
           </div>
           <p className="text-[#AACCB8] text-lg max-w-xl">
             Canada · USA · Mexico - June 11 to July 19, 2026
           </p>
-          <div className="flex gap-4 mt-4">
+          <div className="flex flex-wrap gap-3 mt-4">
             <div className="bg-[#1A6B3A] rounded-lg px-4 py-2 text-sm">
               <span className="text-[#F5C518] font-bold">48</span>
               <span className="text-[#AACCB8] ml-1">Teams</span>
@@ -69,9 +69,9 @@ export default async function WorldCup() {
       {/* Group Stage */}
       <div className="px-6 py-8">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-xl font-black uppercase tracking-wider mb-6 text-[#F5C518]">
-            Group Stage Fixtures
-          </h2>
+        <h2 className="text-lg md:text-xl font-black uppercase tracking-wider mb-6 text-[#F5C518]">
+          Group Stage Fixtures
+        </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(groups).map(([groupName, groupMatches]) => (

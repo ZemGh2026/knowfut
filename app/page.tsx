@@ -19,7 +19,7 @@ export default async function Home() {
       {/* Hero */}
       <div className="border-b border-[#1A6B3A] px-6 py-10">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-black mb-3">
+        <h1 className="text-2xl md:text-4xl font-black mb-3">
             Know what to watch.<br />
             <span className="text-[#F5C518]">Where to watch it.</span><br />
             Why it matters.
@@ -33,11 +33,13 @@ export default async function Home() {
       {/* Today's Matches */}
       <div className="px-6 py-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="w-2 h-2 bg-[#F5C518] rounded-full animate-pulse"></span>
-            <h2 className="text-lg font-bold uppercase tracking-wider">Today&apos;s Matches</h2>
-            <span className="text-sm text-[#AACCB8]">{today}</span>
-          </div>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-6">
+  <div className="flex items-center gap-2">
+    <span className="w-2 h-2 bg-[#F5C518] rounded-full animate-pulse"></span>
+    <h2 className="text-lg font-bold uppercase tracking-wider">Today&apos;s Matches</h2>
+  </div>
+  <span className="text-sm text-[#AACCB8] pl-4 sm:pl-0">{today}</span>
+</div>
 
           {matches.length === 0 ? (
             <div>
