@@ -31,6 +31,12 @@ function parseTime(date: string, time: string): string {
   }
 }
 
+function slugify(team1: string, team2: string, date: string): string {
+  const clean = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${clean(team1)}-vs-${clean(team2)}-${date}`;
+}
+
 function Flag({ team }: { team: string }) {
   const code = getFlagCode(team);
   if (!code) return <span className="text-base">🏳️</span>;
@@ -45,6 +51,7 @@ function Flag({ team }: { team: string }) {
 function MatchCard({ match }: { match: Match }) {
   const [localTime, setLocalTime] = useState("");
   const [localDate, setLocalDate] = useState("");
+  const slug = slugify(match.team1, match.team2, match.date);
 
   useEffect(() => {
     if (match.utcTime) {
@@ -55,7 +62,7 @@ function MatchCard({ match }: { match: Match }) {
   }, [match.utcTime]);
 
   return (
-    <div className="bg-[#0A3D1F] rounded-xl overflow-hidden hover:bg-[#0d4a25] transition-colors cursor-pointer">
+    <a href={`/match/${slug}`} className="bg-[#0A3D1F] rounded-xl overflow-hidden hover:bg-[#0d4a25] transition-colors cursor-pointer block no-underline text-white">
       {match.round && (
         <div className="px-3 pt-2">
           <span className="text-xs text-[#AACCB8]">{match.round}</span>
@@ -85,7 +92,7 @@ function MatchCard({ match }: { match: Match }) {
           <span className="text-[#AACCB8] text-xs">🏟️ Venue: {match.ground}</span>
         )}
       </div>
-    </div>
+    </a>
   );
 }
 

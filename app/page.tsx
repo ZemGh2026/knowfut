@@ -60,6 +60,12 @@ function Flag({ team }: { team: string }) {
   );
 }
 
+function slugify(team1: string, team2: string, date: string): string {
+  const clean = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `${clean(team1)}-vs-${clean(team2)}-${date}`;
+}
+
 function MatchCard({ match, showDate = false }: { match: Match; showDate?: boolean }) {
   const [localTime, setLocalTime] = useState<string>("");
   const [localDate, setLocalDate] = useState<string>("");
@@ -78,9 +84,10 @@ function MatchCard({ match, showDate = false }: { match: Match; showDate?: boole
 
   const isLive = match.status === "in progress";
   const isDone = match.status === "completed";
+  const slug = slugify(match.team1, match.team2, match.date);
 
   return (
-    <div className="bg-[#1A6B3A] rounded-xl overflow-hidden hover:bg-[#1f7d44] transition-colors cursor-pointer">
+    <a href={`/match/${slug}`} className="bg-[#1A6B3A] rounded-xl overflow-hidden hover:bg-[#1f7d44] transition-colors cursor-pointer block no-underline text-white">
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 pt-3 pb-2">
         <div className="flex items-center gap-2">
@@ -122,7 +129,7 @@ function MatchCard({ match, showDate = false }: { match: Match; showDate?: boole
           <span className="text-[#AACCB8] text-xs">🏟️ Venue: {match.ground}</span>
         )}
       </div>
-    </div>
+    </a>
   );
 }
 
