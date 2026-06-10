@@ -105,8 +105,8 @@ const VPNS: VpnService[] = [
     logo: "🔒",
     color: "#4687FF",
     textColor: "#fff",
-    affiliateUrl: "https://nordvpn.com/", // ← replace with your NordVPN affiliate URL
-    active: false,
+    affiliateUrl: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=150196&url_id=902", // ← replace with your NordVPN affiliate URL
+    active: true,
     note: "68% off + 3 months free",
   },
   {
