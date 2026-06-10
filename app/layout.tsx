@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "KnowFut helps soccer fans find today's matches, legal watch options, kickoff times, fixtures, standings, and simple match guides.",
   verification: {
     other: {
-      "impact-site-verification": "2eb30f47-8fe9-4826-a274-582ffeb7722c'", // ← paste the value Impact gives you
+      "impact-site-verification": "0ffa140e-e720-45ef-9c2a-1ed3c6241f79", // ← paste the value Impact gives you
     },
   },
 };
