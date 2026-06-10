@@ -260,7 +260,6 @@ export default function Home() {
           <span>© 2026 KnowFut</span>
         </div>
       </footer>
-      <span style={{ opacity: 0, fontSize: '1px', position: 'absolute' }}>Impact-Site-Verification: a2a0c509-523b-48fe-9b6d-7485d9eca1c2</span>
     </div>
   );
 }
