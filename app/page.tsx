@@ -17,7 +17,7 @@ interface Match {
   away_team?: { goals?: number };
 }
 
-// Fixed time parser — handles hour overflow (e.g. 20 - (-7) = 27 → next day 03:00)
+// Fixed time parser - handles hour overflow (e.g. 20 - (-7) = 27 → next day 03:00)
 function parseTime(date: string, time: string): string {
   try {
     const m = time.match(/^(\d{2}):(\d{2})(?:\s+UTC([+-]\d+))?/);
@@ -106,7 +106,7 @@ function MatchCard({ match, showDate = false }: { match: Match; showDate?: boole
         )}
       </div>
 
-      {/* Teams — vertical stack */}
+      {/* Teams - vertical stack */}
       <div className="px-4 pb-2 flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Flag team={match.team1} />
@@ -226,7 +226,7 @@ export default function Home() {
                 <div className="bg-[#1A6B3A] rounded-xl p-4 mb-4 text-center">
                   <p className="text-[#F5C518] font-bold">⚽ World Cup starts June 11!</p>
                   <p className="text-[#AACCB8] text-sm mt-1">
-                    No matches today — showing the next fixture per group:
+                    No matches today - showing the next fixture per group:
                   </p>
                 </div>
               )}
