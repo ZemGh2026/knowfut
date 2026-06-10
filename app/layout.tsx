@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "KnowFut - Today's Soccer Matches, Watch Guide & Match Meaning",
   description: "KnowFut helps soccer fans find today's matches, legal watch options, kickoff times, fixtures, standings, and simple match guides.",
+  verification: {
+    other: {
+      "impact-site-verification": "2eb30f47-8fe9-4826-a274-582ffeb7722c'", // ← paste the value Impact gives you
+    },
+  },
 };
 
 export default function RootLayout({
