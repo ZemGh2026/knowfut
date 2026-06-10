@@ -16,11 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "KnowFut - Today's Soccer Matches, Watch Guide & Match Meaning",
   description: "KnowFut helps soccer fans find today's matches, legal watch options, kickoff times, fixtures, standings, and simple match guides.",
-  verification: {
-    other: {
-      "impact-site-verification": "0ffa140e-e720-45ef-9c2a-1ed3c6241f79", // ← paste the value Impact gives you
-    },
-  },
 };
 
 export default function RootLayout({
@@ -33,6 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+      <meta name="impact-site-verification" content="0ffa140e-e720-45ef-9c2a-1ed3c6241f79" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
