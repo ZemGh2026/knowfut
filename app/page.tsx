@@ -240,9 +240,9 @@ export default function Home() {
             <div className="text-[#0A3D1F] font-black text-lg">Can&apos;t find where to watch?</div>
             <div className="text-[#0A3D1F] text-sm mt-1">We show you every legal streaming option by country.</div>
           </div>
-          <button className="bg-[#0A3D1F] text-white px-5 py-2 rounded-lg font-bold text-sm hover:bg-[#1A6B3A] transition-colors">
+          <a href="/fixtures" className="bg-[#0A3D1F] text-white px-5 py-2 rounded-lg font-bold text-sm hover:bg-[#1A6B3A] transition-colors">
             Find Streams →
-          </button>
+          </a>
         </div>
       </div>
 

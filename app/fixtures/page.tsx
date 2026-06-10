@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { getFlagCode } from "../lib/countryFlags";
+import WatchLinks from "../components/WatchLinks";
 
 interface Match {
   team1: string;
@@ -36,77 +37,88 @@ function Flag({ team }: { team: string }) {
   return (
     <span
       className={`fi fi-${code}`}
-      style={{
-        width: "1.4rem",
-        height: "1rem",
-        display: "inline-block",
-        borderRadius: "2px",
-        flexShrink: 0,
-      }}
+      style={{ width: "1.4rem", height: "1rem", display: "inline-block", borderRadius: "2px", flexShrink: 0 }}
     />
   );
 }
 
 function MatchRow({ match }: { match: Match }) {
   const [localTime, setLocalTime] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (match.utcTime) {
       const d = new Date(match.utcTime);
       setLocalTime(
-        d.toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          timeZoneName: "short",
-        })
+        d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" })
       );
     }
   }, [match.utcTime]);
 
   return (
-    <div className="bg-[#0A3D1F] rounded-xl px-4 py-3 hover:bg-[#0d4a25] transition-colors cursor-pointer">
-      <div className="flex items-center gap-3">
-        {/* Time */}
-        <div className="w-28 flex-shrink-0">
-          {localTime ? (
-            <span className="text-[#F5C518] font-bold text-xs">{localTime}</span>
-          ) : (
-            <span className="text-[#AACCB8] text-xs">--:--</span>
-          )}
+    <div
+      className="bg-[#0A3D1F] rounded-xl overflow-hidden hover:bg-[#0d4a25] transition-colors"
+    >
+      {/* Main row — clickable to expand */}
+      <div
+        className="px-4 py-3 cursor-pointer"
+        onClick={() => setExpanded((v) => !v)}
+      >
+        <div className="flex items-center gap-3">
+          {/* Time */}
+          <div className="w-28 flex-shrink-0">
+            {localTime ? (
+              <span className="text-[#F5C518] font-bold text-xs">{localTime}</span>
+            ) : (
+              <span className="text-[#AACCB8] text-xs">--:--</span>
+            )}
+          </div>
+
+          {/* Teams */}
+          <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+            <div className="flex items-center gap-2">
+              <Flag team={match.team1} />
+              <span className="font-bold text-sm truncate">{match.team1}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Flag team={match.team2} />
+              <span className="font-bold text-sm truncate">{match.team2}</span>
+            </div>
+          </div>
+
+          {/* Group + venue */}
+          <div className="text-right flex-shrink-0 hidden sm:block">
+            {match.group && (
+              <div className="text-[#F5C518] text-xs font-semibold">{match.group}</div>
+            )}
+            {match.ground && (
+              <div className="text-[#AACCB8] text-xs mt-0.5">🏟️ {match.ground}</div>
+            )}
+          </div>
+
+          {/* Expand chevron */}
+          <div className={`text-[#AACCB8] text-xs ml-2 transition-transform ${expanded ? "rotate-180" : ""}`}>
+            ▼
+          </div>
         </div>
 
-        {/* Teams */}
-        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
-          <div className="flex items-center gap-2">
-            <Flag team={match.team1} />
-            <span className="font-bold text-sm truncate">{match.team1}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Flag team={match.team2} />
-            <span className="font-bold text-sm truncate">{match.team2}</span>
-          </div>
-        </div>
-
-        {/* Right side: group + venue */}
-        <div className="text-right flex-shrink-0 hidden sm:block">
-          {match.group && (
-            <div className="text-[#F5C518] text-xs font-semibold">{match.group}</div>
-          )}
-          {match.ground && (
-            <div className="text-[#AACCB8] text-xs mt-0.5">🏟️ {match.ground}</div>
-          )}
+        {/* Mobile: group + venue */}
+        <div className="sm:hidden mt-2 pt-2 border-t border-[#1A6B3A] flex items-center gap-3 flex-wrap">
+          {match.group && <span className="text-[#F5C518] text-xs font-semibold">{match.group}</span>}
+          {match.ground && <span className="text-[#AACCB8] text-xs">🏟️ {match.ground}</span>}
         </div>
       </div>
 
-      {/* Mobile: group + venue below */}
-      <div className="sm:hidden mt-2 pt-2 border-t border-[#1A6B3A] flex items-center gap-3 flex-wrap">
-        {match.group && (
-          <span className="text-[#F5C518] text-xs font-semibold">{match.group}</span>
-        )}
-        {match.ground && (
-          <span className="text-[#AACCB8] text-xs">🏟️ {match.ground}</span>
-        )}
-      </div>
+      {/* Expanded: Where to Watch */}
+      {expanded && (
+        <div className="px-4 pb-4 border-t border-[#1A6B3A]">
+          <WatchLinks
+            teams={[match.team1, match.team2]}
+            group={match.group}
+            compact={false}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -122,22 +134,19 @@ function DaySection({
 }) {
   return (
     <div className="mb-6">
-      {/* Date header */}
       <div className="flex items-center gap-3 mb-3">
         <div
           className={`px-3 py-1 rounded-lg text-sm font-bold ${
-            isToday
-              ? "bg-[#F5C518] text-[#0A3D1F]"
-              : "bg-[#1A6B3A] text-white"
+            isToday ? "bg-[#F5C518] text-[#0A3D1F]" : "bg-[#1A6B3A] text-white"
           }`}
         >
-          {isToday ? "🟡 Today" : ""} {dateLabel}
+          {isToday ? "🟡 Today — " : ""}{dateLabel}
         </div>
-        <span className="text-[#AACCB8] text-xs">{matches.length} match{matches.length !== 1 ? "es" : ""}</span>
+        <span className="text-[#AACCB8] text-xs">
+          {matches.length} match{matches.length !== 1 ? "es" : ""}
+        </span>
         <div className="flex-1 h-px bg-[#1A6B3A]" />
       </div>
-
-      {/* Match rows */}
       <div className="flex flex-col gap-2">
         {matches.map((match, i) => (
           <MatchRow key={i} match={match} />
@@ -165,12 +174,10 @@ export default function FixturesPage() {
         const allMatches: any[] = data.matches;
         const todayStr = new Date().toISOString().split("T")[0];
 
-        // Attach UTC time and sort by utcTime
         const enriched = allMatches
           .map((m) => ({ ...m, utcTime: parseTime(m.date, m.time ?? "") }))
           .sort((a, b) => a.utcTime.localeCompare(b.utcTime));
 
-        // Group by date
         const byDate: Record<string, Match[]> = {};
         enriched.forEach((m) => {
           if (!byDate[m.date]) byDate[m.date] = [];
@@ -180,17 +187,9 @@ export default function FixturesPage() {
         const sections = Object.entries(byDate).map(([dateKey, matches]) => {
           const d = new Date(`${dateKey}T12:00:00Z`);
           const dateLabel = d.toLocaleDateString("en-US", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
+            weekday: "long", month: "long", day: "numeric", year: "numeric",
           });
-          return {
-            dateKey,
-            dateLabel,
-            isToday: dateKey === todayStr,
-            matches,
-          };
+          return { dateKey, dateLabel, isToday: dateKey === todayStr, matches };
         });
 
         setGroupedByDate(sections);
@@ -208,7 +207,7 @@ export default function FixturesPage() {
   const filtered = groupedByDate.filter((section) => {
     if (filter === "today") return section.dateKey === todayStr;
     if (filter === "upcoming") return section.dateKey >= todayStr;
-    return true; // "all"
+    return true;
   });
 
   const totalMatches = filtered.reduce((sum, s) => sum + s.matches.length, 0);
@@ -217,7 +216,6 @@ export default function FixturesPage() {
     <div className="min-h-screen bg-[#0A3D1F] text-white">
       <Navbar />
 
-      {/* Header */}
       <div className="border-b border-[#1A6B3A] px-6 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
@@ -225,7 +223,7 @@ export default function FixturesPage() {
             <h1 className="text-2xl md:text-3xl font-black">Fixtures</h1>
           </div>
           <p className="text-[#AACCB8] text-sm">
-            FIFA World Cup 2026 · All times in your local timezone
+            FIFA World Cup 2026 · All times in your local timezone · Click any match to see where to watch
           </p>
         </div>
       </div>
@@ -238,7 +236,7 @@ export default function FixturesPage() {
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors capitalize ${
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
                   filter === f
                     ? "bg-[#F5C518] text-[#0A3D1F]"
                     : "bg-[#1A6B3A] text-white hover:bg-[#2E9E58]"
@@ -254,7 +252,6 @@ export default function FixturesPage() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="px-6 py-6">
         <div className="max-w-4xl mx-auto">
           {loading ? (
@@ -267,7 +264,6 @@ export default function FixturesPage() {
             <div className="text-center py-20 text-[#AACCB8]">
               <p className="text-4xl mb-4">⚠️</p>
               <p className="font-bold">Could not load fixtures.</p>
-              <p className="text-sm mt-1">Please try again later.</p>
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-20 text-[#AACCB8]">
@@ -287,7 +283,6 @@ export default function FixturesPage() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="border-t border-[#1A6B3A] px-6 py-6 mt-8">
         <div className="max-w-4xl mx-auto flex items-center justify-between text-sm text-[#AACCB8]">
           <span>⚽ KnowFut - Know the game.</span>
