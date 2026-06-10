@@ -100,15 +100,15 @@ interface WatchLinksProps {
   
   // ── VPN (affiliate links — apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
   const VPNS: VpnService[] = [
-    {
-      name: "NordVPN",
-      logo: "🔒",
-      color: "#4687FF",
-      textColor: "#fff",
-      affiliateUrl: "https://nordvpn.com/", // ← replace with your NordVPN affiliate URL
-      active: false,
-      note: "68% off + 3 months free",
-    },
+      {
+        name: "NordVPN",
+        logo: "🔒",
+        color: "#4687FF",
+        textColor: "#fff",
+        affiliateUrl: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=150196&url_id=902", // ← your real link
+        active: true, // ← flip to true
+        note: "68% off + 3 months free",
+      },
     {
       name: "ExpressVPN",
       logo: "🛡️",
