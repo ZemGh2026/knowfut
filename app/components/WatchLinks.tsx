@@ -1,7 +1,7 @@
 // app/components/WatchLinks.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Three sections:
-// 1. FREE options (FOX, FS1, Telemundo - no affiliate, just info)
+// 1. FREE options (FOX, FS1, Telemundo — no affiliate, just info)
 // 2. STREAMING (paid, affiliate links)
 // 3. VPN (for fans outside the US)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -47,8 +47,8 @@ interface WatchLinksProps {
       logo: "🦊",
       color: "#003087",
       textColor: "#fff",
-      affiliateUrl: "https://www.fox.com/foxone/", // ← replace with affiliate URL
-      active: false,
+      affiliateUrl: "https://www.fox.com/foxone/",
+      active: true,
       note: "$19.99/mo · All 104 matches",
     },
     {
@@ -56,7 +56,7 @@ interface WatchLinksProps {
       logo: "📺",
       color: "#7B2FBE",
       textColor: "#fff",
-      affiliateUrl: "https://www.fubo.tv/welcome", // ← replace with affiliate URL
+      affiliateUrl: "https://www.fubo.tv/welcome", // ← replace with affiliate URL when approved
       active: false,
       note: "Free trial · FOX + FS1",
     },
@@ -65,7 +65,7 @@ interface WatchLinksProps {
       logo: "🟢",
       color: "#1CE783",
       textColor: "#000",
-      affiliateUrl: "https://www.hulu.com/live-tv", // ← replace with affiliate URL
+      affiliateUrl: "https://www.hulu.com/live-tv", // ← replace with affiliate URL when approved
       active: false,
       note: "FOX + FS1 included",
     },
@@ -74,7 +74,7 @@ interface WatchLinksProps {
       logo: "▶️",
       color: "#FF0000",
       textColor: "#fff",
-      affiliateUrl: "https://tv.youtube.com/", // ← replace with affiliate URL
+      affiliateUrl: "https://tv.youtube.com/", // ← replace with affiliate URL when approved
       active: false,
       note: "FOX + FS1 included",
     },
@@ -83,8 +83,8 @@ interface WatchLinksProps {
       logo: "🦚",
       color: "#000000",
       textColor: "#fff",
-      affiliateUrl: "https://www.peacocktv.com/", // ← replace with affiliate URL
-      active: false,
+      affiliateUrl: "https://www.peacocktv.com/",
+      active: true,
       note: "$7.99/mo · Spanish coverage",
     },
     {
@@ -92,13 +92,13 @@ interface WatchLinksProps {
       logo: "⚡",
       color: "#F8FF00",
       textColor: "#000",
-      affiliateUrl: "https://www.dazn.com/", // ← replace with affiliate URL
-      active: false,
+      affiliateUrl: "https://www.dazn.com/",
+      active: true,
       note: "200+ countries",
     },
   ];
   
-  // ── VPN (affiliate links - apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
+  // ── VPN (affiliate links — apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
   const VPNS: VpnService[] = [
     {
       name: "NordVPN",
@@ -249,7 +249,7 @@ interface WatchLinksProps {
             <span className="text-sm font-bold text-[#F5C518]">Unlock any stream with a VPN</span>
           </div>
           <p className="text-xs text-[#AACCB8] mb-3">
-            FOX, FS1 and Telemundo are geo-blocked outside the US. A VPN connects you through a US server so you can watch any match - legally and safely.
+            FOX, FS1 and Telemundo are geo-blocked outside the US. A VPN connects you through a US server so you can watch any match — legally and safely.
           </p>
           {activeVpns.length > 0 ? (
             <div className="flex flex-wrap gap-2">
@@ -287,14 +287,14 @@ interface WatchLinksProps {
                 ))}
               </div>
               <p className="text-xs text-[#AACCB8] mt-2">
-                🔒 VPN links coming soon - approvals pending.
+                🔒 VPN links coming soon — approvals pending.
               </p>
             </>
           )}
         </div>
   
         <p className="text-xs text-[#AACCB8] px-1">
-          * Streaming and VPN links may be affiliate links - KnowFut may earn a small commission at no extra cost to you.
+          * Streaming and VPN links may be affiliate links — KnowFut may earn a small commission at no extra cost to you.
         </p>
       </div>
     );
