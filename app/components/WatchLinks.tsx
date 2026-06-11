@@ -1,7 +1,7 @@
 // app/components/WatchLinks.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Three sections:
-// 1. FREE options (FOX, FS1, Telemundo — no affiliate, just info)
+// 1. FREE options (FOX, FS1, Telemundo - no affiliate, just info)
 // 2. STREAMING (paid, affiliate links)
 // 3. VPN (for fans outside the US)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -98,7 +98,7 @@ const STREAMING: StreamingService[] = [
   },
 ];
 
-// ── VPN (affiliate links — apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
+// ── VPN (affiliate links - apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
 const VPNS: VpnService[] = [
   {
     name: "NordVPN",
@@ -249,7 +249,7 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
           <span className="text-sm font-bold text-[#F5C518]">Unlock any stream with a VPN</span>
         </div>
         <p className="text-xs text-[#AACCB8] mb-3">
-          FOX, FS1 and Telemundo are geo-blocked outside the US. A VPN connects you through a US server so you can watch any match — legally and safely.
+          FOX, FS1 and Telemundo are geo-blocked outside the US. A VPN connects you through a US server so you can watch any match - legally and safely.
         </p>
         {activeVpns.length > 0 ? (
           <div className="flex flex-wrap gap-2">
@@ -287,7 +287,7 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
               ))}
             </div>
             <p className="text-xs text-[#AACCB8] mt-2">
-              🔒 VPN links coming soon — approvals pending.
+              🔒 VPN links coming soon - approvals pending.
             </p>
           </>
         )}
@@ -297,7 +297,7 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
         ⚠️ KnowFut does not stream any matches. We are a match guide that recommends legal viewing options only.
       </p>
       <p className="text-xs text-[#AACCB8] px-1">
-        * Streaming and VPN links may be affiliate links — KnowFut may earn a small commission at no extra cost to you.
+        * Streaming and VPN links may be affiliate links - KnowFut may earn a small commission at no extra cost to you.
       </p>
     </div>
   );
