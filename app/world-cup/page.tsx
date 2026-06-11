@@ -191,7 +191,6 @@ export default function WorldCupPage() {
         </div>
       </div>
 
-      // In return:
       <Footer />
     </div>
   );

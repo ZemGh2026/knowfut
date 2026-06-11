@@ -284,7 +284,6 @@ export default function FixturesPage() {
         </div>
       </div>
 
-      // In return:
       <Footer />
     </div>
   );

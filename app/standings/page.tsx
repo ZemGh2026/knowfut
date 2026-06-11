@@ -281,7 +281,6 @@ export default function StandingsPage() {
       </div>
 
       {/* Footer */}
-      // In return:
       <Footer />
     </div>
   );

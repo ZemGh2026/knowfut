@@ -401,7 +401,6 @@ export default function MatchPage() {
         </a>
       </div>
 
-      // In return:
       <Footer />
     </div>
   );

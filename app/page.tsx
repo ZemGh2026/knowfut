@@ -256,7 +256,6 @@ export default function Home() {
 
       {/* Footer */}
 
-      // In return:
       <Footer />
     </div>
   );
