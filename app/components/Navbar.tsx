@@ -5,10 +5,10 @@ export default function Navbar() {
   return (
     <nav className="border-b border-[#1A6B3A] px-6 py-4 relative">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
-          <span className="text-2xl">⚽</span>
-          <span className="text-2xl font-black tracking-tight text-white">KnowFut</span>
-        </a>
+      <a href="/" className="flex items-center">
+      <span className="text-2xl">⚽</span>
+<span className="text-2xl font-black tracking-tight text-white">KnowFut</span>
+      </a>
         <div className="hidden md:flex items-center gap-6 text-sm text-[#AACCB8]">
           <a href="/" className="hover:text-white transition-colors">Today</a>
           <a href="/fixtures" className="hover:text-white transition-colors">Fixtures</a>
