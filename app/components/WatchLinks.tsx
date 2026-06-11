@@ -105,7 +105,7 @@ const VPNS: VpnService[] = [
     logo: "🔒",
     color: "#4687FF",
     textColor: "#fff",
-    affiliateUrl: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=150196&url_id=902", // ← replace with your NordVPN affiliate URL
+    affiliateUrl: "https://go.nordvpn.net/aff_c?offer_id=15&aff_id=150196&url_id=902",
     active: true,
     note: "68% off + 3 months free",
   },
@@ -293,6 +293,9 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
         )}
       </div>
 
+      <p className="text-xs text-[#AACCB8] px-1">
+        ⚠️ KnowFut does not stream any matches. We are a match guide that recommends legal viewing options only.
+      </p>
       <p className="text-xs text-[#AACCB8] px-1">
         * Streaming and VPN links may be affiliate links — KnowFut may earn a small commission at no extra cost to you.
       </p>
