@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Privacy Policy | KnowFut",
@@ -129,12 +130,8 @@ export default function PrivacyPage() {
         </div>
       </div>
 
-      <footer className="border-t border-[#1A6B3A] px-6 py-6 mt-8">
-        <div className="max-w-3xl mx-auto flex items-center justify-between text-sm text-[#AACCB8]">
-          <span>⚽ KnowFut - Know the game.</span>
-          <span>© 2026 KnowFut</span>
-        </div>
-      </footer>
+      // In return:
+      <Footer />
     </div>
   );
 }
