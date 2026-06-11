@@ -42,15 +42,7 @@ const FREE_CHANNELS = [
 
 // ── PAID streaming (affiliate links) ─────────────────────────────────────
 const STREAMING: StreamingService[] = [
-  {
-    name: "Paramount+",
-    logo: "⭐",
-    color: "#0064FF",
-    textColor: "#fff",
-    affiliateUrl: "https://www.paramountplus.com/", // ← replace with FlexOffers affiliate URL when approved
-    active: true,
-    note: "NFL, UEFA & more",
-  },
+
   {
     name: "FOX One",
     logo: "🦊",
