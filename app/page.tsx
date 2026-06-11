@@ -150,7 +150,7 @@ export default function Home() {
         );
         const data = await res.json();
         const allMatches: any[] = data.matches;
-        const todayStr = new Date().toISOString().split("T")[0];
+        const todayStr = new Date().toLocaleDateString("en-CA"); // returns YYYY-MM-DD in local time
 
         const todayMatches = allMatches
           .filter((m) => m.date === todayStr)
