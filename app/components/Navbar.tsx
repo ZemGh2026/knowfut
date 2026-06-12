@@ -7,7 +7,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto flex items-center justify-between">
       <a href="/" className="flex items-center">
       <span className="text-2xl">⚽</span>
-<span className="text-2xl font-black tracking-tight text-white">KnowFut</span>
+      <span className="text-3xl font-black tracking-tight text-white">KnowFut</span>
       </a>
         <div className="hidden md:flex items-center gap-6 text-sm text-[#AACCB8]">
           <a href="/" className="hover:text-white transition-colors">Today</a>

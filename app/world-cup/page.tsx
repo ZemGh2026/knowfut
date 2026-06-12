@@ -4,39 +4,49 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { getFlagCode } from "../lib/countryFlags";
 import Footer from "../components/Footer";
+import type { ApiFixture } from "../lib/matches";
+import { fixtureSlug } from "../lib/matches";
 
-interface Match {
-  team1: string;
-  team2: string;
-  date: string;
-  time?: string;
-  utcTime?: string;
-  ground?: string;
-  group?: string;
-  round?: string;
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function toLocalDateStr(isoString: string): string {
+  return new Date(isoString).toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
 }
 
-function parseTime(date: string, time: string): string {
-  try {
-    const m = time.match(/^(\d{2}):(\d{2})(?:\s+UTC([+-]\d+))?/);
-    if (!m) return `${date}T00:00:00Z`;
-    const localHours = parseInt(m[1]);
-    const localMinutes = parseInt(m[2]);
-    const offsetHours = m[3] ? parseInt(m[3]) : 0;
-    // Use setUTCHours so JS handles day rollover automatically
-    const baseDate = new Date(`${date}T00:00:00Z`);
-    baseDate.setUTCHours(localHours - offsetHours, localMinutes, 0, 0);
-    return baseDate.toISOString();
-  } catch {
-    return `${date}T00:00:00Z`;
-  }
+function toLocalTimeStr(isoString: string): string {
+  return new Date(isoString).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
 }
 
-function slugify(team1: string, team2: string, date: string): string {
-  const clean = (s: string) =>
-    s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  return `${clean(team1)}-vs-${clean(team2)}-${date}`;
+/** True if this round is part of the group stage */
+function isGroupStage(round: string): boolean {
+  return round.toLowerCase().startsWith("group stage");
 }
+
+/** Extract group letter from round string e.g. "Group Stage - 1" → use team data
+ *  API-Football doesn't put group letter in the round string, so we bucket by
+ *  a synthetic group key derived from fixture IDs. Instead, group by the
+ *  `round` value itself for now (e.g. "Group A" comes from standings, not fixtures).
+ *  For the world-cup overview page we group by round matchday which is fine UX. */
+function roundLabel(round: string): string {
+  return round
+    .replace("Group Stage - ", "Matchday ")
+    .replace("Round of 32", "Round of 32")
+    .replace("Round of 16", "Round of 16")
+    .replace("Quarter-finals", "Quarter-finals")
+    .replace("Semi-finals", "Semi-finals")
+    .replace("3rd Place Final", "3rd Place Final")
+    .replace("Final", "Final");
+}
+
+// ─── Flag ─────────────────────────────────────────────────────────────────────
 
 function Flag({ team }: { team: string }) {
   const code = getFlagCode(team);
@@ -44,96 +54,154 @@ function Flag({ team }: { team: string }) {
   return (
     <span
       className={`fi fi-${code}`}
-      style={{ width: "1.4rem", height: "1rem", display: "inline-block", borderRadius: "2px", flexShrink: 0 }}
+      style={{
+        width: "1.4rem",
+        height: "1rem",
+        display: "inline-block",
+        borderRadius: "2px",
+        flexShrink: 0,
+      }}
     />
   );
 }
 
-function MatchCard({ match }: { match: Match }) {
-  const [localTime, setLocalTime] = useState("");
-  const [localDate, setLocalDate] = useState("");
-  const slug = slugify(match.team1, match.team2, match.date);
+// ─── Score / Status ───────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    if (match.utcTime) {
-      const d = new Date(match.utcTime);
-      setLocalTime(d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" }));
-      setLocalDate(d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }));
-    }
-  }, [match.utcTime]);
+function MatchStatus({ fixture }: { fixture: ApiFixture }) {
+  const { short, elapsed } = fixture.status;
+  const isLive = short === "1H" || short === "2H" || short === "HT";
+  const isDone = short === "FT" || short === "AET" || short === "PEN";
+  const hasScore = fixture.homeGoals !== null && fixture.awayGoals !== null;
+
+  if (isDone && hasScore) {
+    return (
+      <div className="text-right">
+        <div className="text-white font-black text-base tabular-nums">
+          {fixture.homeGoals} – {fixture.awayGoals}
+        </div>
+        <div className="text-[#AACCB8] text-xs">FT</div>
+      </div>
+    );
+  }
+  if (isLive && hasScore) {
+    return (
+      <div className="text-right">
+        <div className="text-green-400 font-black text-base tabular-nums animate-pulse">
+          {fixture.homeGoals} – {fixture.awayGoals}
+        </div>
+        <div className="text-green-400 text-xs font-bold">
+          {short === "HT" ? "HT" : `${elapsed ?? ""}′`}
+        </div>
+      </div>
+    );
+  }
+  if (short === "PST") {
+    return <div className="text-orange-400 text-xs font-bold text-right">PST</div>;
+  }
+  return null;
+}
+
+// ─── Match Card ───────────────────────────────────────────────────────────────
+
+function MatchCard({ fixture }: { fixture: ApiFixture }) {
+  const slug = fixtureSlug(fixture);
+  const isLive =
+    fixture.status.short === "1H" ||
+    fixture.status.short === "2H" ||
+    fixture.status.short === "HT";
 
   return (
-    <a href={`/match/${slug}`} className="bg-[#0A3D1F] rounded-xl overflow-hidden hover:bg-[#0d4a25] transition-colors cursor-pointer block no-underline text-white">
-      {match.round && (
-        <div className="px-3 pt-2">
-          <span className="text-xs text-[#AACCB8]">{match.round}</span>
+    <a
+      href={`/match/${slug}`}
+      className="bg-[#0A3D1F] rounded-xl overflow-hidden hover:bg-[#0d4a25] transition-colors block no-underline text-white"
+    >
+      {isLive && <div className="h-0.5 w-full bg-green-400" />}
+
+      <div className="px-3 py-2.5 flex items-center gap-3">
+        {/* Teams */}
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0">
+          <div className="flex items-center gap-2">
+            <Flag team={fixture.homeTeam} />
+            <span className="font-bold text-sm truncate">{fixture.homeTeam}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Flag team={fixture.awayTeam} />
+            <span className="font-bold text-sm truncate">{fixture.awayTeam}</span>
+          </div>
+        </div>
+
+        {/* Score or time */}
+        <div className="flex-shrink-0 text-right">
+          <MatchStatus fixture={fixture} />
+          {fixture.status.short === "NS" && (
+            <div>
+              <div className="text-[#F5C518] font-bold text-xs">
+                {toLocalTimeStr(fixture.date)}
+              </div>
+              <div className="text-[#AACCB8] text-xs mt-0.5">
+                {toLocalDateStr(fixture.date)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Venue */}
+      {(fixture.city || fixture.venue) && (
+        <div className="px-3 pb-2.5 border-t border-[#1A6B3A] pt-1.5">
+          <span className="text-[#AACCB8] text-xs">
+            🏟️ {fixture.city || fixture.venue}
+          </span>
         </div>
       )}
-
-      {/* Teams — vertical */}
-      <div className="px-3 py-2 flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <Flag team={match.team1} />
-          <span className="font-bold text-sm">{match.team1}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Flag team={match.team2} />
-          <span className="font-bold text-sm">{match.team2}</span>
-        </div>
-      </div>
-
-      {/* Time + Venue */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 pb-3 border-t border-[#1A6B3A] pt-2">
-        {localTime && (
-          <span className="text-[#F5C518] font-bold text-xs">
-            🕐 {localDate} · {localTime}
-          </span>
-        )}
-        {match.ground && (
-          <span className="text-[#AACCB8] text-xs">🏟️ Venue: {match.ground}</span>
-        )}
-      </div>
     </a>
   );
 }
 
-function GroupSection({ name, matches }: { name: string; matches: Match[] }) {
+// ─── Round Section ────────────────────────────────────────────────────────────
+
+function RoundSection({
+  round,
+  fixtures,
+}: {
+  round: string;
+  fixtures: ApiFixture[];
+}) {
   return (
     <div className="bg-[#1A6B3A] rounded-2xl overflow-hidden">
       <div className="px-4 py-3 flex items-center justify-between border-b border-[#0A3D1F]">
-        <h3 className="font-black text-sm uppercase tracking-wider text-[#F5C518]">{name}</h3>
-        <span className="text-xs text-[#AACCB8]">{matches.length} matches</span>
+        <h3 className="font-black text-sm uppercase tracking-wider text-[#F5C518]">
+          {roundLabel(round)}
+        </h3>
+        <span className="text-xs text-[#AACCB8]">{fixtures.length} matches</span>
       </div>
       <div className="p-3 flex flex-col gap-2">
-        {matches.map((match, i) => (
-          <MatchCard key={i} match={match} />
+        {fixtures.map((f) => (
+          <MatchCard key={f.id} fixture={f} />
         ))}
       </div>
     </div>
   );
 }
 
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
+type Tab = "group" | "knockout";
+
 export default function WorldCupPage() {
-  const [grouped, setGrouped] = useState<Record<string, Match[]>>({});
+  const [fixtures, setFixtures] = useState<ApiFixture[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [tab, setTab] = useState<Tab>("group");
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(
-          "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json"
-        );
-        const data = await res.json();
-        const groups: Record<string, Match[]> = {};
-        data.matches.forEach((m: any) => {
-          const key = m.group ?? "Other";
-          if (!groups[key]) groups[key] = [];
-          groups[key].push({ ...m, utcTime: parseTime(m.date, m.time ?? "") });
-        });
-        const sorted: Record<string, Match[]> = {};
-        Object.keys(groups).sort().forEach((k) => (sorted[k] = groups[k]));
-        setGrouped(sorted);
+        const res = await fetch("/api/fixtures");
+        if (!res.ok) throw new Error("Failed");
+        const data: ApiFixture[] = await res.json();
+        data.sort((a, b) => a.date.localeCompare(b.date));
+        setFixtures(data);
       } catch {
         setError(true);
       } finally {
@@ -143,10 +211,34 @@ export default function WorldCupPage() {
     load();
   }, []);
 
+  // Split into group vs knockout
+  const groupFixtures = fixtures.filter((f) => isGroupStage(f.round));
+  const knockoutFixtures = fixtures.filter((f) => !isGroupStage(f.round));
+
+  // Group by round
+  function groupByRound(list: ApiFixture[]): Record<string, ApiFixture[]> {
+    return list.reduce<Record<string, ApiFixture[]>>((acc, f) => {
+      if (!acc[f.round]) acc[f.round] = [];
+      acc[f.round].push(f);
+      return acc;
+    }, {});
+  }
+
+  const groupRounds = groupByRound(groupFixtures);
+  const knockoutRounds = groupByRound(knockoutFixtures);
+
+  const activeRounds =
+    tab === "group"
+      ? Object.entries(groupRounds).sort(([a], [b]) => a.localeCompare(b))
+      : Object.entries(knockoutRounds).sort(([a], [b]) => a.localeCompare(b));
+
+  const hasKnockout = knockoutFixtures.length > 0;
+
   return (
     <div className="min-h-screen bg-[#0A3D1F] text-white">
       <Navbar />
 
+      {/* Header */}
       <div className="border-b border-[#1A6B3A] px-6 py-8">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
@@ -154,17 +246,54 @@ export default function WorldCupPage() {
             <h1 className="text-2xl md:text-3xl font-black">FIFA World Cup 2026</h1>
           </div>
           <p className="text-[#AACCB8] text-sm">
-            June 11 – July 19, 2026 · USA, Canada &amp; Mexico · All times in your local timezone
+            June 11 – July 19, 2026 · USA, Canada &amp; Mexico · All times in your
+            local timezone
           </p>
         </div>
       </div>
 
-      <div className="px-6 py-8">
+      {/* Tabs */}
+      <div className="px-6 pt-6">
+        <div className="max-w-5xl mx-auto flex gap-2">
+          <button
+            onClick={() => setTab("group")}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
+              tab === "group"
+                ? "bg-[#F5C518] text-[#0A3D1F]"
+                : "bg-[#1A6B3A] text-white hover:bg-[#2E9E58]"
+            }`}
+          >
+            Group Stage
+          </button>
+          <button
+            onClick={() => setTab("knockout")}
+            disabled={!hasKnockout}
+            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
+              tab === "knockout"
+                ? "bg-[#F5C518] text-[#0A3D1F]"
+                : hasKnockout
+                ? "bg-[#1A6B3A] text-white hover:bg-[#2E9E58]"
+                : "bg-[#1A6B3A] text-[#AACCB8] opacity-50 cursor-not-allowed"
+            }`}
+          >
+            Knockout Stage
+            {!hasKnockout && (
+              <span className="ml-1.5 text-xs font-normal opacity-70">· TBD</span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="px-6 py-6">
         <div className="max-w-5xl mx-auto">
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="bg-[#1A6B3A] rounded-2xl p-4 animate-pulse h-64" />
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-[#1A6B3A] rounded-2xl p-4 animate-pulse h-64"
+                />
               ))}
             </div>
           ) : error ? (
@@ -173,20 +302,15 @@ export default function WorldCupPage() {
               <p className="font-bold">Could not load fixtures.</p>
             </div>
           ) : (
-            <>
-              <div className="flex items-center gap-2 mb-6">
-                <span className="w-2 h-2 bg-[#F5C518] rounded-full" />
-                <h2 className="text-lg font-bold uppercase tracking-wider">Group Stage</h2>
-                <span className="text-[#AACCB8] text-sm ml-1">· {Object.keys(grouped).length} Groups</span>
-              </div>
-
-              {/* 2 columns */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(grouped).map(([groupName, matches]) => (
-                  <GroupSection key={groupName} name={groupName} matches={matches} />
-                ))}
-              </div>
-            </>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {activeRounds.map(([round, roundFixtures]) => (
+                <RoundSection
+                  key={round}
+                  round={round}
+                  fixtures={roundFixtures}
+                />
+              ))}
+            </div>
           )}
         </div>
       </div>
