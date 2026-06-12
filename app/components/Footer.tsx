@@ -32,6 +32,22 @@ export default function Footer() {
           </a>
         </div>
 
+        {/* Social media */}
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-[#AACCB8]">Follow us:</span>
+          <a
+            href="https://x.com/KnowFut"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 bg-[#1A6B3A] hover:bg-[#2E9E58] px-3 py-1.5 rounded-lg transition-colors"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-white">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.912-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span className="text-xs text-white font-bold">@KnowFut</span>
+          </a>
+        </div>
+
         {/* Bottom bar */}
         <div className="flex items-center justify-between pt-2 border-t border-[#1A6B3A]">
           <span className="text-xs text-[#AACCB8]">⚽ KnowFut - Know what to watch. Where to watch it. Why it matters.</span>
