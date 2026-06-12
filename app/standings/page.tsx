@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import { getFlagCode } from "../lib/countryFlags";
 import { getStandings, GroupStandings, StandingRow } from "../lib/matches";
 
-export const revalidate = 300; // revalidate every 5 minutes
+export const revalidate = 60; // revalidate every 5 minutes
 
 // ─── Flag component ───────────────────────────────────────────────────────────
 function Flag({ team }: { team: string }) {

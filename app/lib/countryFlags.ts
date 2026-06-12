@@ -58,6 +58,7 @@ export const countryFlagCodes: Record<string, string> = {
 
   // Group L
   Turkey: "tr",
+  "Türkiye": "tr",
   "Côte d'Ivoire": "ci",
   "Ivory Coast": "ci",
 

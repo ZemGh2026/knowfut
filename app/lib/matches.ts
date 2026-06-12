@@ -82,10 +82,10 @@ function mapFixture(f: any): ApiFixture {
   };
 }
 
-async function apiFetch(path: string): Promise<any> {
+async function apiFetch(path: string, revalidate = 60): Promise<any> {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: getHeaders(),
-    next: { revalidate: 300 }, // 5-minute ISR cache
+    next: { revalidate }, // configurable cache
   });
 
   if (!res.ok) {
@@ -163,7 +163,7 @@ export function formatLocalDate(isoString: string): string {
  */
 export async function getAllMatches(): Promise<ApiFixture[]> {
   const data = await apiFetch(
-    `/fixtures?league=${LEAGUE_ID}&season=${SEASON}`
+    `/fixtures?league=${LEAGUE_ID}&season=${SEASON}`, 60
   );
   return (data as any[]).map(mapFixture);
 }
@@ -214,7 +214,7 @@ export async function getMatchById(fixtureId: number): Promise<ApiFixture | null
  */
 export async function getStandings(): Promise<GroupStandings[]> {
   const data = await apiFetch(
-    `/standings?league=${LEAGUE_ID}&season=${SEASON}`
+    `/standings?league=${LEAGUE_ID}&season=${SEASON}`, 30
   );
 
   // data[0].league.standings is an array of groups (each group = array of team rows)
