@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { getMatchById, getStandings } from "../../../lib/matches";
+import {
+  getMatchById,
+  getStandings,
+  getMatchEvents,
+  getMatchStatistics,
+} from "../../../lib/matches";
 
 export const revalidate = 60;
 
@@ -9,7 +14,6 @@ export async function GET(
 ) {
   const { fixtureId } = await params;
   const id = parseInt(fixtureId, 10);
-
   if (isNaN(id)) {
     return NextResponse.json({ error: "Invalid fixture ID" }, { status: 400 });
   }
@@ -31,7 +35,20 @@ export async function GET(
         )
       ) ?? null;
 
-    return NextResponse.json({ fixture, groupStandings });
+    // Only fetch events/stats if match has started
+    const hasStarted =
+      fixture.status.short !== "NS" &&
+      fixture.status.short !== "PST" &&
+      fixture.status.short !== "CANC";
+
+    const [events, stats] = hasStarted
+      ? await Promise.all([
+          getMatchEvents(id),
+          getMatchStatistics(id),
+        ])
+      : [[], []];
+
+    return NextResponse.json({ fixture, groupStandings, events, stats });
   } catch (error) {
     console.error("Match API route error:", error);
     return NextResponse.json({ error: "Failed to fetch match" }, { status: 500 });

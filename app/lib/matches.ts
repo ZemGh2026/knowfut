@@ -271,3 +271,68 @@ export async function getRounds(): Promise<string[]> {
   );
   return data as string[];
 }
+// ─── Add these types to matches.ts ───────────────────────────────────────────
+
+export interface MatchEvent {
+  minute: number;
+  extraMinute: number | null;
+  team: string;
+  player: string;
+  assist: string | null;
+  type: "Goal" | "Card" | "Subst" | "Var";
+  detail: string; // e.g. "Normal Goal", "Yellow Card", "Red Card", "Penalty"
+}
+
+export interface TeamStat {
+  label: string;
+  home: string | number | null;
+  away: string | number | null;
+}
+
+export interface MatchStats {
+  events: MatchEvent[];
+  stats: TeamStat[];
+}
+
+// ─── Add these functions to matches.ts ───────────────────────────────────────
+
+/**
+ * Fetch match events (goals, cards, subs) for a fixture.
+ */
+export async function getMatchEvents(fixtureId: number): Promise<MatchEvent[]> {
+  try {
+    const data = await apiFetch(`/fixtures/events?fixture=${fixtureId}`, 60);
+    return (data as any[]).map((e: any) => ({
+      minute: e.time.elapsed,
+      extraMinute: e.time.extra ?? null,
+      team: e.team.name,
+      player: e.player.name ?? "",
+      assist: e.assist?.name ?? null,
+      type: e.type,
+      detail: e.detail,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Fetch match statistics (possession, shots, etc.) for a fixture.
+ */
+export async function getMatchStatistics(fixtureId: number): Promise<TeamStat[]> {
+  try {
+    const data = await apiFetch(`/fixtures/statistics?fixture=${fixtureId}`, 60);
+    if (!data || data.length < 2) return [];
+
+    const homeStats = data[0].statistics as { type: string; value: any }[];
+    const awayStats = data[1].statistics as { type: string; value: any }[];
+
+    return homeStats.map((s, i) => ({
+      label: s.type,
+      home: s.value,
+      away: awayStats[i]?.value ?? null,
+    }));
+  } catch {
+    return [];
+  }
+}
