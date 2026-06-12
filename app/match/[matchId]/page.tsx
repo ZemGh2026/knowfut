@@ -8,6 +8,7 @@ import WatchLinks from "../../components/WatchLinks";
 import Footer from "../../components/Footer";
 import type { ApiFixture, GroupStandings, StandingRow } from "../../lib/matches";
 import { fixtureSlug, slugToFixtureId } from "../../lib/matches";
+import MatchPoll from "../../components/MatchPoll";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -391,11 +392,26 @@ export default function MatchPage() {
       <div className="max-w-3xl mx-auto px-6 py-8 flex flex-col gap-6">
 
         {/* Where to Watch */}
-        <WatchLinks
+{/* Where to Watch */}
+<WatchLinks
           teams={[fixture.homeTeam, fixture.awayTeam]}
           group={fixture.round}
           compact={false}
         />
+
+        {/* Community Prediction Poll */}
+        <MatchPoll
+          fixtureId={fixture.id}
+          homeTeam={fixture.homeTeam}
+          awayTeam={fixture.awayTeam}
+          kickoff={fixture.date}
+          isLive={isLive}
+          isFinished={isCompleted}
+          homeGoals={fixture.homeGoals}
+          awayGoals={fixture.awayGoals}
+        />
+
+        {/* Group Standings */}
 
         {/* Group Standings */}
         {groupStandings && (
