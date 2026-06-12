@@ -1,10 +1,4 @@
 // app/components/WatchLinks.tsx
-// ─────────────────────────────────────────────────────────────────────────────
-// Three sections:
-// 1. FREE options (FOX, FS1, Telemundo - no affiliate, just info)
-// 2. STREAMING (paid, affiliate links)
-// 3. VPN (for fans outside the US)
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface WatchLinksProps {
   teams?: string[];
@@ -32,17 +26,14 @@ interface VpnService {
   note?: string;
 }
 
-// ── FREE channels (no affiliate needed, just info) ────────────────────────
 const FREE_CHANNELS = [
-  { name: "FOX", note: "70 matches · Free over air", logo: "📡" },
-  { name: "FS1", note: "34 matches · Cable/antenna", logo: "📡" },
-  { name: "Telemundo", note: "Spanish · Free over air", logo: "📡" },
-  { name: "Universo", note: "Spanish · Cable", logo: "📡" },
+  { name: "FOX", note: "70 matches · Free over air" },
+  { name: "FS1", note: "34 matches · Cable/antenna" },
+  { name: "Telemundo", note: "Spanish · Free over air" },
+  { name: "Universo", note: "Spanish · Cable" },
 ];
 
-// ── PAID streaming (affiliate links) ─────────────────────────────────────
 const STREAMING: StreamingService[] = [
-
   {
     name: "FOX One",
     logo: "🦊",
@@ -57,7 +48,7 @@ const STREAMING: StreamingService[] = [
     logo: "📺",
     color: "#7B2FBE",
     textColor: "#fff",
-    affiliateUrl: "https://www.fubo.tv/welcome", // ← replace with affiliate URL when approved
+    affiliateUrl: "https://www.fubo.tv/welcome",
     active: true,
     note: "Free trial · FOX + FS1",
   },
@@ -66,7 +57,7 @@ const STREAMING: StreamingService[] = [
     logo: "🟢",
     color: "#1CE783",
     textColor: "#000",
-    affiliateUrl: "https://www.hulu.com/live-tv", // ← replace with affiliate URL when approved
+    affiliateUrl: "https://www.hulu.com/live-tv",
     active: true,
     note: "FOX + FS1 included",
   },
@@ -75,7 +66,7 @@ const STREAMING: StreamingService[] = [
     logo: "▶️",
     color: "#FF0000",
     textColor: "#fff",
-    affiliateUrl: "https://tv.youtube.com/", // ← replace with affiliate URL when approved
+    affiliateUrl: "https://tv.youtube.com/",
     active: true,
     note: "FOX + FS1 included",
   },
@@ -99,7 +90,6 @@ const STREAMING: StreamingService[] = [
   },
 ];
 
-// ── VPN (affiliate links - apply at affiliates.nordvpn.com & expressvpn.com/affiliates)
 const VPNS: VpnService[] = [
   {
     name: "NordVPN",
@@ -115,7 +105,7 @@ const VPNS: VpnService[] = [
     logo: "🛡️",
     color: "#DA3940",
     textColor: "#fff",
-    affiliateUrl: "https://www.expressvpn.com/", // ← replace with your ExpressVPN affiliate URL
+    affiliateUrl: "https://www.expressvpn.com/",
     active: false,
     note: "30-day money back",
   },
@@ -125,7 +115,6 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
   const activeStreaming = STREAMING.filter((s) => s.active);
   const activeVpns = VPNS.filter((v) => v.active);
 
-  // ── COMPACT mode ──────────────────────────────────────────────────────────
   if (compact) {
     return (
       <div className="flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-[#0A3D1F]">
@@ -161,7 +150,6 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
     );
   }
 
-  // ── FULL mode ─────────────────────────────────────────────────────────────
   return (
     <div className="mt-3 flex flex-col gap-3">
 
@@ -169,23 +157,20 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
       <div className="bg-[#1A6B3A] rounded-xl p-4">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded font-black uppercase tracking-wide">
-            FREE
+            ON TV
           </span>
-          <span className="text-sm font-bold">Watch for free (US)</span>
+          <span className="text-sm font-bold">Watch on television (US)</span>
         </div>
         <div className="flex flex-wrap gap-2 mb-2">
           {FREE_CHANNELS.map((ch) => (
-            <div
-              key={ch.name}
-              className="bg-[#0A3D1F] rounded-lg px-3 py-2 flex flex-col"
-            >
+            <div key={ch.name} className="bg-[#0A3D1F] rounded-lg px-3 py-2 flex flex-col">
               <span className="font-black text-sm text-white">{ch.name}</span>
               <span className="text-xs text-[#AACCB8] mt-0.5">{ch.note}</span>
             </div>
           ))}
         </div>
         <p className="text-xs text-[#AACCB8]">
-          📡 FOX & Telemundo are free with a TV antenna in the US. No subscription needed.
+          📡 FOX and Telemundo may be available over-the-air in the US with a compatible antenna. Cable and satellite subscribers may have access through their provider. Check your local listings for availability.
         </p>
       </div>
 
@@ -198,61 +183,39 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
           <span className="text-sm font-bold">Watch online (subscription)</span>
           {group && <span className="text-xs text-[#AACCB8]">· {group}</span>}
         </div>
-
-        {activeStreaming.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
-            {activeStreaming.map((s) => (
-              <a
-                key={s.name}
-                href={s.affiliateUrl}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-transform hover:scale-105"
-                style={{ backgroundColor: s.color, color: s.textColor }}
-              >
-                <span>{s.logo}</span>
-                <div>
-                  <div>{s.name}</div>
-                  {s.note && <div className="text-xs font-normal opacity-80">{s.note}</div>}
-                </div>
-              </a>
-            ))}
-          </div>
-        ) : (
-          <>
-            <div className="flex flex-wrap gap-2">
-              {STREAMING.map((s) => (
-                <div
-                  key={s.name}
-                  className="flex items-center gap-2 bg-[#0A3D1F] px-3 py-1.5 rounded-lg opacity-40 cursor-not-allowed"
-                >
-                  <span className="text-sm">{s.logo}</span>
-                  <div>
-                    <div className="text-xs font-bold text-[#AACCB8]">{s.name}</div>
-                    {s.note && <div className="text-xs text-[#AACCB8] opacity-75">{s.note}</div>}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-[#AACCB8] mt-2">
-              ⚡ Direct streaming links coming soon.
-            </p>
-          </>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {activeStreaming.map((s) => (
+            <a
+              key={s.name}
+              href={s.affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm transition-transform hover:scale-105"
+              style={{ backgroundColor: s.color, color: s.textColor }}
+            >
+              <span>{s.logo}</span>
+              <div>
+                <div>{s.name}</div>
+                {s.note && <div className="text-xs font-normal opacity-80">{s.note}</div>}
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
 
-      {/* 3. VPN */}
+      {/* 3. VPN — reworded for compliance */}
       <div className="bg-[#0A3D1F] border border-[#1A6B3A] rounded-xl p-4">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex items-center gap-2 mb-2">
           <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded font-black uppercase tracking-wide">
-            OUTSIDE US?
+            OUTSIDE THE US?
           </span>
-          <span className="text-sm font-bold text-[#F5C518]">Unlock any stream with a VPN</span>
         </div>
         <p className="text-xs text-[#AACCB8] mb-3">
-          FOX, FS1 and Telemundo are geo-blocked outside the US. A VPN connects you through a US server so you can watch any match - legally and safely.
+          Some broadcasters and streaming services may only be available in certain countries.
+          Please check the official broadcaster or streaming provider available in your location.
+          VPN availability depends on each service&apos;s terms and local regulations.
         </p>
-        {activeVpns.length > 0 ? (
+        {activeVpns.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {activeVpns.map((v) => (
               <a
@@ -271,35 +234,19 @@ export default function WatchLinks({ teams, group, compact = false }: WatchLinks
               </a>
             ))}
           </div>
-        ) : (
-          <>
-            <div className="flex flex-wrap gap-2">
-              {VPNS.map((v) => (
-                <div
-                  key={v.name}
-                  className="flex items-center gap-2 bg-[#1A6B3A] px-3 py-2 rounded-lg opacity-40 cursor-not-allowed flex-1 min-w-[140px]"
-                >
-                  <span>{v.logo}</span>
-                  <div>
-                    <div className="text-xs font-bold">{v.name}</div>
-                    <div className="text-xs text-[#AACCB8]">{v.note}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-[#AACCB8] mt-2">
-              🔒 VPN links coming soon - approvals pending.
-            </p>
-          </>
         )}
       </div>
 
-      <p className="text-xs text-[#AACCB8] px-1">
-        ⚠️ KnowFut does not stream any matches. We are a match guide that recommends legal viewing options only.
-      </p>
-      <p className="text-xs text-[#AACCB8] px-1">
-        * Streaming and VPN links may be affiliate links - KnowFut may earn a small commission at no extra cost to you.
-      </p>
+      {/* Disclaimers */}
+      <div className="flex flex-col gap-1.5 px-1">
+        <p className="text-xs text-[#AACCB8]">
+          ⚠️ KnowFut does not stream any matches. We are an independent football match guide that helps fans find official TV and streaming options.
+        </p>
+        <p className="text-xs text-[#AACCB8]">
+          * Some links may be affiliate links. KnowFut may earn a small commission at no extra cost to you.
+        </p>
+      </div>
+
     </div>
   );
 }
