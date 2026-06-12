@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { getFlagCode } from "./lib/countryFlags";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -105,7 +105,14 @@ function MatchCard({
               🌍 WC 2026
             </span>
             <span className="text-xs text-[#AACCB8] truncate max-w-[100px]">
-              {fixture.round.replace("Group Stage - ", "MD")}
+              {fixture.round.startsWith("Group Stage")
+                ? (() => {
+                    // Try to extract group letter from standings-style name
+                    // API returns "Group Stage - 1" for round, no letter available here
+                    // so just show "Group Stage"
+                    return "Group Stage";
+                  })()
+                : fixture.round}
             </span>
           </div>
 
@@ -256,22 +263,41 @@ export default function Home() {
     day: "numeric",
   });
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch("/api/fixtures");
-        if (!res.ok) throw new Error("Failed");
-        const data: ApiFixture[] = await res.json();
-        data.sort((a, b) => a.date.localeCompare(b.date));
-        setFixtures(data);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const load = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    try {
+      const res = await fetch("/api/fixtures");
+      if (!res.ok) throw new Error("Failed");
+      const data: ApiFixture[] = await res.json();
+      data.sort((a, b) => a.date.localeCompare(b.date));
+      setFixtures(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      if (!silent) setLoading(false);
     }
-    load();
   }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  // Auto-refresh every 60s when live matches exist
+  useEffect(() => {
+    const hasLive = fixtures.some(
+      (f) => f.status.short === "1H" || f.status.short === "2H" || f.status.short === "HT"
+    );
+    if (hasLive) {
+      intervalRef.current = setInterval(() => load(true), 60_000);
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fixtures, load]);
 
   const today_key = todayKey();
 
@@ -308,6 +334,24 @@ export default function Home() {
           <p className="text-[#AACCB8] text-lg max-w-xl">
             Your match guide for FIFA World Cup 2026.
           </p>
+
+          {/* Quick stats */}
+          {!loading && fixtures.length > 0 && (
+            <div className="flex flex-wrap gap-4 mt-5">
+              <div className="flex items-center gap-2 text-sm text-[#AACCB8]">
+                <span className="text-[#F5C518] font-black">{fixtures.length}</span> matches
+              </div>
+              <div className="flex items-center gap-2 text-sm text-[#AACCB8]">
+                <span className="text-[#F5C518] font-black">48</span> teams
+              </div>
+              <div className="flex items-center gap-2 text-sm text-[#AACCB8]">
+                <span className="text-[#F5C518] font-black">3</span> countries
+              </div>
+              <div className="flex items-center gap-2 text-sm text-[#AACCB8]">
+                <span className="text-[#F5C518] font-black">16</span> venues
+              </div>
+            </div>
+          )}
 
           {/* Live badge */}
           {liveCount > 0 && (
@@ -357,12 +401,18 @@ export default function Home() {
               ))}
 
               {/* See all link */}
-              <div className="text-center mt-4">
+              <div className="text-center mt-6">
                 <a
                   href="/fixtures"
-                  className="text-[#AACCB8] text-sm hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 bg-[#1A6B3A] hover:bg-[#2E9E58] text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors"
                 >
-                  View full schedule →
+                  📅 View full schedule
+                </a>
+                <a
+                  href="/standings"
+                  className="inline-flex items-center gap-2 bg-[#1A6B3A] hover:bg-[#2E9E58] text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors ml-3"
+                >
+                  🏅 Standings
                 </a>
               </div>
             </>
