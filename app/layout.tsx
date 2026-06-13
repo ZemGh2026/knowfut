@@ -15,8 +15,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KnowFut - Today's Soccer Matches, Watch Guide & Match Meaning",
-  description: "KnowFut helps soccer fans find today's matches, legal watch options, kickoff times, fixtures, standings, and simple match guides.",
+  title: "Today's Football Matches - Live Scores & Where to Watch | KnowFut",
+  description:
+    "See today's football matches, live scores, kickoff times, fixtures, and where to watch games on TV or streaming. Follow World Cup 2026, Premier League, Champions League, MLS, LaLiga, and more.",
+  keywords:
+    "football matches today, live scores, where to watch football, World Cup 2026, Premier League, Champions League, MLS, LaLiga, Serie A, Bundesliga, kickoff times, football fixtures",
+  openGraph: {
+    title: "Today's Football Matches - Live Scores & Where to Watch | KnowFut",
+    description:
+      "Live scores, kickoff times, fixtures, and where to watch today's football matches - including World Cup 2026 and top football competitions all year round.",
+    url: "https://knowfut.com",
+    siteName: "KnowFut",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Today's Football Matches - Live Scores & Where to Watch | KnowFut",
+    description:
+      "Live scores, kickoff times, fixtures, and where to watch today's football matches - including World Cup 2026 and top competitions.",
+    site: "@KnowFut",
+  },
 };
 
 export default function RootLayout({
