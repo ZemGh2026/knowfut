@@ -9,6 +9,24 @@ import { fixtureSlug } from "../lib/matches";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function toLocalDateKey(iso: string): string {
+  const d = new Date(iso);
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, "0"),
+    String(d.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function todayKey(): string {
+  const d = new Date();
+  return [
+    d.getFullYear(),
+    String(d.getMonth() + 1).padStart(2, "0"),
+    String(d.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
 function toLocalTime(iso: string): string {
   return new Date(iso).toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -23,6 +41,22 @@ function toShortDate(iso: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+function getFTLabel(iso: string): string {
+  const matchDate = toLocalDateKey(iso);
+  const today = todayKey();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayKey = [
+    yesterday.getFullYear(),
+    String(yesterday.getMonth() + 1).padStart(2, "0"),
+    String(yesterday.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  if (matchDate === today) return "FT · Today";
+  if (matchDate === yesterdayKey) return "FT · Yesterday";
+  return `FT · ${toShortDate(iso)}`;
 }
 
 // ─── Flag ─────────────────────────────────────────────────────────────────────
@@ -50,20 +84,16 @@ function GroupCard({
   group: GroupStandings;
   fixtures: ApiFixture[];
 }) {
-  // Sort fixtures by date
   const sorted = [...fixtures].sort((a, b) => a.date.localeCompare(b.date));
 
   return (
     <div className="bg-[#1A6B3A] rounded-2xl overflow-hidden">
-
-      {/* Group header */}
       <div className="px-4 py-3 border-b border-[#0A3D1F]">
         <h3 className="font-black text-sm uppercase tracking-wider text-[#F5C518]">
           {group.group}
         </h3>
       </div>
 
-      {/* Standings mini table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -114,7 +144,6 @@ function GroupCard({
         </table>
       </div>
 
-      {/* Legend */}
       <div className="px-4 py-1.5 flex items-center gap-4 border-t border-[#0A3D1F] border-b border-b-[#0A3D1F]">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-3 bg-[#F5C518] rounded-sm" />
@@ -126,7 +155,6 @@ function GroupCard({
         </div>
       </div>
 
-      {/* Matches */}
       {sorted.length > 0 && (
         <div className="p-3 flex flex-col gap-2">
           {sorted.map((fixture) => {
@@ -146,7 +174,6 @@ function GroupCard({
               >
                 {isLive && <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse flex-shrink-0" />}
 
-                {/* Teams */}
                 <div className="flex-1 flex flex-col gap-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <Flag team={fixture.homeTeam} size="xs" />
@@ -162,7 +189,6 @@ function GroupCard({
                   </div>
                 </div>
 
-                {/* Score or time */}
                 <div className="flex-shrink-0 text-right">
                   {hasScore ? (
                     <div>
@@ -170,7 +196,11 @@ function GroupCard({
                         {fixture.homeGoals} – {fixture.awayGoals}
                       </div>
                       <div className="text-xs text-[#AACCB8]">
-                        {isLive ? (short === "HT" ? "HT" : `${elapsed ?? ""}′`) : "FT"}
+                        {isLive
+                          ? (short === "HT" ? "HT" : `${elapsed ?? ""}′`)
+                          : isDone
+                          ? getFTLabel(fixture.date)
+                          : "FT"}
                       </div>
                     </div>
                   ) : (
@@ -225,7 +255,6 @@ export default function WorldCupPage() {
     load();
   }, []);
 
-  // Split fixtures
   const groupFixtures = fixtures.filter((f) =>
     f.round.toLowerCase().startsWith("group stage")
   );
@@ -234,7 +263,6 @@ export default function WorldCupPage() {
   );
   const hasKnockout = knockoutFixtures.length > 0;
 
-  // Match fixtures to each group by team membership
   function fixturesForGroup(group: GroupStandings): ApiFixture[] {
     const teamNames = new Set(group.rows.map((r) => r.team));
     return groupFixtures.filter(
@@ -242,7 +270,6 @@ export default function WorldCupPage() {
     );
   }
 
-  // Knockout rounds grouped
   const knockoutByRound = knockoutFixtures.reduce<Record<string, ApiFixture[]>>(
     (acc, f) => {
       if (!acc[f.round]) acc[f.round] = [];
@@ -256,7 +283,6 @@ export default function WorldCupPage() {
     <div className="min-h-screen bg-[#0A3D1F] text-white">
       <Navbar />
 
-      {/* Header */}
       <div className="border-b border-[#1A6B3A] px-6 py-8">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
@@ -269,7 +295,6 @@ export default function WorldCupPage() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="px-6 pt-6">
         <div className="max-w-5xl mx-auto flex gap-2">
           <button
@@ -297,7 +322,6 @@ export default function WorldCupPage() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="px-6 py-6">
         <div className="max-w-5xl mx-auto">
           {loading ? (
@@ -337,6 +361,7 @@ export default function WorldCupPage() {
                         const slug = fixtureSlug(fixture);
                         const { short, elapsed } = fixture.status;
                         const isLive = short === "1H" || short === "2H" || short === "HT";
+                        const isDone = short === "FT" || short === "AET" || short === "PEN";
                         const hasScore = fixture.homeGoals !== null && fixture.awayGoals !== null;
                         const homeWin = hasScore && fixture.homeGoals! > fixture.awayGoals!;
                         const awayWin = hasScore && fixture.awayGoals! > fixture.homeGoals!;
@@ -363,8 +388,17 @@ export default function WorldCupPage() {
                             </div>
                             <div className="flex-shrink-0 text-right">
                               {hasScore ? (
-                                <div className={`font-black text-sm tabular-nums ${isLive ? "text-green-400" : "text-[#F5C518]"}`}>
-                                  {fixture.homeGoals} – {fixture.awayGoals}
+                                <div>
+                                  <div className={`font-black text-sm tabular-nums ${isLive ? "text-green-400" : "text-[#F5C518]"}`}>
+                                    {fixture.homeGoals} – {fixture.awayGoals}
+                                  </div>
+                                  <div className="text-xs text-[#AACCB8]">
+                                    {isLive
+                                      ? (short === "HT" ? "HT" : `${elapsed ?? ""}′`)
+                                      : isDone
+                                      ? getFTLabel(fixture.date)
+                                      : "FT"}
+                                  </div>
                                 </div>
                               ) : (
                                 <div>
