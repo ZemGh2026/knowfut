@@ -26,6 +26,7 @@ export default function Navbar() {
             >
               🏆 World Cup 2026
             </a>
+            <a href="/match-time-converter" className="hover:text-white transition-colors">⏰ Time Converter</a>
           </div>
 
           {/* Right side */}
@@ -62,6 +63,9 @@ export default function Navbar() {
               </a>
               <a href="/world-cup" className="text-[#F5C518] font-black py-2 border-b border-[#1A6B3A] transition-colors" onClick={() => setMenuOpen(false)}>
                 🏆 World Cup 2026
+              </a>
+              <a href="/match-time-converter" className="text-[#AACCB8] hover:text-white py-2 border-b border-[#1A6B3A] transition-colors" onClick={() => setMenuOpen(false)}>
+                ⏰ Time Converter
               </a>
               <a href="/about" className="text-[#AACCB8] hover:text-white py-2 transition-colors" onClick={() => setMenuOpen(false)}>
                 ℹ️ About KnowFut

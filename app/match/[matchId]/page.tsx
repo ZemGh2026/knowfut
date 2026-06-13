@@ -9,6 +9,7 @@ import Footer from "../../components/Footer";
 import type { ApiFixture, GroupStandings, StandingRow, MatchEvent, TeamStat } from "../../lib/matches";
 import { fixtureSlug, slugToFixtureId } from "../../lib/matches";
 import MatchPoll from "../../components/MatchPoll";
+import AddToCalendar from "../../components/AddToCalendar";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -566,6 +567,18 @@ export default function MatchPage() {
           group={fixture.round}
           compact={false}
         />
+
+        {/* Add to Calendar */}
+        <AddToCalendar
+          homeTeam={fixture.homeTeam}
+          awayTeam={fixture.awayTeam}
+          kickoff={fixture.date}
+          venue={fixture.venue}
+          city={fixture.city}
+          round={fixture.round}
+          matchUrl={`https://knowfut.com/match/${fixtureSlug(fixture)}`}
+        />
+
 
         {/* Community Prediction Poll */}
         <MatchPoll
