@@ -257,7 +257,7 @@ export default function Home() {
             Today&apos;s Football Matches
           </h1>
           <p className="text-[#AACCB8] text-lg max-w-2xl">
-            Live scores, kickoff times, fixtures, and where to watch today&apos;s football matches —
+            Live scores, kickoff times, fixtures, and where to watch today&apos;s football matches -
             including <span className="text-[#F5C518] font-bold">World Cup 2026</span> and top
             competitions all year round.
           </p>
