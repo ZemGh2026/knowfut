@@ -67,7 +67,7 @@ function Flag({ team }: { team: string }) {
 
 // ─── Match Card ───────────────────────────────────────────────────────────────
 
-function MatchCard({ fixture, showDate = false }: { fixture: ApiFixture; showDate?: boolean }) {
+function MatchCard({ fixture, showDate = false, groupMap = {} }: { fixture: ApiFixture; showDate?: boolean; groupMap?: Record<string, string> }) {
   const [expanded, setExpanded] = useState(false);
   const slug = fixtureSlug(fixture);
   const { short, elapsed } = fixture.status;
@@ -89,7 +89,9 @@ function MatchCard({ fixture, showDate = false }: { fixture: ApiFixture; showDat
               🏆 WC 2026
             </span>
             <span className="text-xs text-[#AACCB8] truncate max-w-[100px]">
-              {fixture.round.startsWith("Group Stage") ? "Group Stage" : fixture.round}
+              {fixture.round.startsWith("Group Stage")
+                ? (groupMap[fixture.homeTeam] || groupMap[fixture.awayTeam] || "Group Stage")
+                : fixture.round}
             </span>
           </div>
           {isLive && (
@@ -159,7 +161,7 @@ function MatchCard({ fixture, showDate = false }: { fixture: ApiFixture; showDat
 
 // ─── Day Section ──────────────────────────────────────────────────────────────
 
-function DaySection({ dateKey, fixtures, isToday }: { dateKey: string; fixtures: ApiFixture[]; isToday: boolean }) {
+function DaySection({ dateKey, fixtures, isToday, groupMap }: { dateKey: string; fixtures: ApiFixture[]; isToday: boolean; groupMap: Record<string, string> }) {
   const label = isToday ? `Today — ${toLongDate(fixtures[0].date)}` : toLongDate(fixtures[0].date);
   return (
     <div className="mb-8">
@@ -171,7 +173,7 @@ function DaySection({ dateKey, fixtures, isToday }: { dateKey: string; fixtures:
         <div className="flex-1 h-px bg-[#1A6B3A]" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {fixtures.map((f) => <MatchCard key={f.id} fixture={f} showDate={false} />)}
+        {fixtures.map((f) => <MatchCard key={f.id} fixture={f} showDate={false} groupMap={groupMap} />)}
       </div>
     </div>
   );
@@ -181,6 +183,7 @@ function DaySection({ dateKey, fixtures, isToday }: { dateKey: string; fixtures:
 
 export default function Home() {
   const [fixtures, setFixtures] = useState<ApiFixture[]>([]);
+  const [groupMap, setGroupMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -191,11 +194,18 @@ export default function Home() {
   const load = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const res = await fetch("/api/fixtures");
-      if (!res.ok) throw new Error("Failed");
-      const data: ApiFixture[] = await res.json();
+      const [fixturesRes, groupMapRes] = await Promise.all([
+        fetch("/api/fixtures"),
+        fetch("/api/group-map"),
+      ]);
+      if (!fixturesRes.ok) throw new Error("Failed");
+      const data: ApiFixture[] = await fixturesRes.json();
       data.sort((a, b) => a.date.localeCompare(b.date));
       setFixtures(data);
+      if (groupMapRes.ok) {
+        const map = await groupMapRes.json();
+        setGroupMap(map);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -247,7 +257,7 @@ export default function Home() {
             Today&apos;s Football Matches
           </h1>
           <p className="text-[#AACCB8] text-lg max-w-2xl">
-            Live scores, kickoff times, fixtures, and where to watch today&apos;s football matches -
+            Live scores, kickoff times, fixtures, and where to watch today&apos;s football matches —
             including <span className="text-[#F5C518] font-bold">World Cup 2026</span> and top
             competitions all year round.
           </p>
@@ -333,7 +343,7 @@ export default function Home() {
           ) : (
             <>
               {displayKeys.map((key) => (
-                <DaySection key={key} dateKey={key} fixtures={grouped[key]} isToday={key === today_key} />
+                <DaySection key={key} dateKey={key} fixtures={grouped[key]} isToday={key === today_key} groupMap={groupMap} />
               ))}
               <div className="text-center mt-6 flex flex-wrap justify-center gap-3">
                 <a href="/fixtures" className="inline-flex items-center gap-2 bg-[#1A6B3A] hover:bg-[#2E9E58] text-white px-6 py-3 rounded-xl font-bold text-sm transition-colors">
