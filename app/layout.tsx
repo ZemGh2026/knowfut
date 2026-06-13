@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Today's Football Matches - Live Scores & Where to Watch | KnowFut",
+  title: "Today's Football Matches - Live Scores & Where to Watch | KnowFut.com",
   description:
     "See today's football matches, live scores, kickoff times, fixtures, and where to watch games on TV or streaming. Follow World Cup 2026, Premier League, Champions League, MLS, LaLiga, and more.",
   keywords:
