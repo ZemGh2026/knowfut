@@ -610,9 +610,12 @@ export default function MatchPage() {
         {/* Other matches in this group */}
         {allGroupFixtures.length > 0 && (
           <div className="bg-[#1A6B3A] rounded-2xl overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#0A3D1F]">
+            <div className="px-4 py-3 border-b border-[#0A3D1F] flex items-center justify-between">
               <span className="font-black text-sm uppercase tracking-wider text-[#F5C518]">
                 Other Group Matches
+              </span>
+              <span className="text-xs text-[#AACCB8]">
+                {groupStandings?.group ?? ""}
               </span>
             </div>
             <div className="p-3 flex flex-col gap-2">
